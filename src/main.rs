@@ -4,6 +4,10 @@ use clap::Parser;
 use rusqlite::{params, Connection, Result};
 extern crate termion;
 
+mod ascii_pets;
+
+use ascii_pets::{ascii_kitten, ascii_pupper};
+
 use std::io::{self, Write};
 use termion::cursor::{self, DetectCursorPos};
 use termion::event::*;
@@ -70,7 +74,7 @@ fn main() {
     }
 
     if args.pattern == "debug" {
-        // display pet in terminal as an animation
+        
         let conn = Connection::open("db.sqlite").unwrap();
         let mut stmt = conn.prepare("SELECT * FROM termies").unwrap();
 
@@ -85,12 +89,17 @@ fn main() {
         )
         .unwrap();
 
-        for c in stdin.events() {
-            let evt = c.unwrap();
+        // print pupper
+
+        for evt in stdin.events() {
+            let evt = evt.unwrap();
+
+            // print pupper
+
             match evt {
                 Event::Key(Key::Char('q')) => break,
-                Event::Mouse(me) => match me {},
-                // todo add mouse events and print pets
+
+                // print pupper
                 _ => {}
             }
 
