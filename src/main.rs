@@ -2,7 +2,13 @@
 
 use clap::Parser;
 use rusqlite::{params, Connection, Result};
+extern crate termion;
 
+use std::io::{self, Write};
+use termion::cursor::{self, DetectCursorPos};
+use termion::event::*;
+use termion::input::{MouseTerminal, TermRead};
+use termion::raw::IntoRawMode;
 /// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser)]
 struct Cli {
@@ -68,6 +74,27 @@ fn main() {
         let conn = Connection::open("db.sqlite").unwrap();
         let mut stmt = conn.prepare("SELECT * FROM termies").unwrap();
 
-        print!("DEBUG: ");
+        let stdin = io::stdin();
+        let mut stdout = MouseTerminal::from(io::stdout().into_raw_mode().unwrap());
+
+        writeln!(
+            stdout,
+            "{}{}q to exit. Type stuff, use alt, click around...",
+            termion::clear::All,
+            termion::cursor::Goto(1, 1)
+        )
+        .unwrap();
+
+        for c in stdin.events() {
+            let evt = c.unwrap();
+            match evt {
+                Event::Key(Key::Char('q')) => break,
+                Event::Mouse(me) => match me {},
+                // todo add mouse events and print pets
+                _ => {}
+            }
+
+            stdout.flush().unwrap();
+        }
     }
 }
