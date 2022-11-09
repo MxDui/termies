@@ -15,6 +15,12 @@ struct Cli {
     name: Option<String>,
 }
 
+struct Termie {
+    name: String,
+    color: String,
+    id: i32,
+}
+
 fn main() {
     let args = Cli::parse();
 
@@ -52,21 +58,15 @@ fn main() {
         .unwrap();
     }
 
-    if args.pattern == "new" {
-        // make a new puppet in db
-        let conn = Connection::open("db.sqlite").unwrap();
-
-        conn.execute(
-            "INSERT INTO termies (name, color, history_id)
-                  VALUES (?1, ?2, ?3)",
-            params![args.name, args.color, 1],
-        )
-        .unwrap();
-    }
+    if args.pattern == "new" {}
 
     if args.pattern == "debug" {
         let conn = Connection::open("db.sqlite").unwrap();
         let mut stmt = conn.prepare("SELECT * FROM termies").unwrap();
+
+
+        // print and update the timer every second put remaining time in the terminal
+
 
         let art = std::fs::read_to_string("./assets/sprites/dog.ans").unwrap();
 
