@@ -3,24 +3,15 @@
 use clap::Parser;
 use rusqlite::{params, Connection, Result};
 extern crate termion;
-
-mod ascii_pets;
-
-use ascii_pets::{ascii_kitten, ascii_pupper};
-
 use std::io::{self, Write};
 use termion::cursor::{self, DetectCursorPos};
 use termion::event::*;
 use termion::input::{MouseTerminal, TermRead};
 use termion::raw::IntoRawMode;
-/// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser)]
 struct Cli {
-    /// make optional pattern
     pattern: String,
-    // required unless pattern == "new"
     color: Option<String>,
-
     name: Option<String>,
 }
 
@@ -74,36 +65,13 @@ fn main() {
     }
 
     if args.pattern == "debug" {
-        
         let conn = Connection::open("db.sqlite").unwrap();
         let mut stmt = conn.prepare("SELECT * FROM termies").unwrap();
 
-        let stdin = io::stdin();
-        let mut stdout = MouseTerminal::from(io::stdout().into_raw_mode().unwrap());
+        let art = std::fs::read_to_string("./assets/sprites/dog.ans").unwrap();
 
-        writeln!(
-            stdout,
-            "{}{}q to exit. Type stuff, use alt, click around...",
-            termion::clear::All,
-            termion::cursor::Goto(1, 1)
-        )
-        .unwrap();
+        let art = format!("{}", art);
 
-        // print pupper
-
-        for evt in stdin.events() {
-            let evt = evt.unwrap();
-
-            // print pupper
-
-            match evt {
-                Event::Key(Key::Char('q')) => break,
-
-                // print pupper
-                _ => {}
-            }
-
-            stdout.flush().unwrap();
-        }
+        println!("\n{art}");
     }
 }
