@@ -8,17 +8,20 @@ use termion::cursor::{self, DetectCursorPos};
 use termion::event::*;
 use termion::input::{MouseTerminal, TermRead};
 use termion::raw::IntoRawMode;
+
+mod termies;
+mod clock;
+
+use clock::clock::{draw, remain_to_fmt};
+
+// import print termie
+use termies::termies::{print_termie, Termie};   
+
 #[derive(Parser)]
 struct Cli {
     pattern: String,
     color: Option<String>,
     name: Option<String>,
-}
-
-struct Termie {
-    name: String,
-    color: String,
-    id: i32,
 }
 
 fn main() {
@@ -68,10 +71,17 @@ fn main() {
         let timer = std::time::Duration::from_secs(1);
         // display timer in terminal
 
-        let art = std::fs::read_to_string("./assets/sprites/dog.ans").unwrap();
+        
+        print_termie(&Termie {
+            id: 0,
+            name: "dog".to_string(),
+            color: "red".to_string(),
+        });
 
-        let art = format!("{}", art);
+        // make a draw clock function
+        draw(100);
 
-        println!("\n{art}");
+
+        
     }
 }

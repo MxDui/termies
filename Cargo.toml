@@ -9,3 +9,4 @@ edition = "2021"
 clap = { version = "4.0", features = ["derive"] }
 rusqlite = "0.27"
 termion = "2.0.1"
+regex = "1.7.0"

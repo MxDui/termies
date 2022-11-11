@@ -1,60 +1,45 @@
 use regex::Regex;
-use rustbox::{self, Color, Event, InitOptions, Key, RustBox};
 use std::collections::HashMap;
 use std::env;
 use std::process::exit;
 use std::time;
+// termion grid
+use termion::raw::IntoRawMode;
+use termion::screen::AlternateScreen;
+use termion::terminal_size;
 
-mod fonts;
 
-fn parse_duration(duration: &str) -> time::Duration {
-    let re = Regex::new(r"((?P<hour>\d+)h)?((?P<minute>\d+)m)?((?P<second>\d+)s)?").unwrap();
-    let caps = re.captures(duration).unwrap();
-    let h: u64 = caps.name("hour").map_or(0, |m| m.as_str().parse().unwrap());
-    let m: u64 = caps
-        .name("minute")
-        .map_or(0, |m| m.as_str().parse().unwrap());
-    let s: u64 = caps
-        .name("second")
-        .map_or(0, |m| m.as_str().parse().unwrap());
-    time::Duration::new(3600 * h + 60 * m + s, 0)
-}
+// make a draw clock function
+pub fn draw (remain: u64){
+    // get the time
+    let now = time::SystemTime::now();
 
-fn draw(rb: &RustBox, remain: u64, table: &HashMap<char, ([&str; 6], usize)>) {
-    let fmt = remain_to_fmt(remain);
-    let symbols = fmt.chars().map(|c| table[&c]);
+    // set til out draw clock will be done
+    let until = now + time::Duration::from_secs(remain);
 
-    let w_sum = symbols.clone().map(|(_, w)| w).fold(0, |sum, w| sum + w);
-    let start_x = rb.width() / 2 - w_sum / 2;
-    let start_y = rb.height() / 2 - 3;
+    // get the time left
+    let mut remain = remain_to_fmt(remain);
 
-    rb.clear();
+    // print the clock in loop
+    loop {
+        // get the time left
 
-    let mut x = start_x;
-    for (symbol, w) in symbols {
-        echo(rb, &symbol, x, start_y);
-        x += w;
+        // print the clock
+        termion::clear::All;
+
+        // print the clock in a grid like this
+        // 00:00:00
+        // if the time is up
+        if time::SystemTime::now() >= until {
+            // break the loop
+            break;
+        }
     }
 
-    rb.present();
 }
 
-fn echo(rb: &RustBox, symbol: &[&str], start_x: usize, start_y: usize) {
-    let mut y = start_y;
-    for line in symbol {
-        rb.print(
-            start_x,
-            y,
-            rustbox::RB_NORMAL,
-            Color::Default,
-            Color::Default,
-            line,
-        );
-        y += 1;
-    }
-}
 
-fn remain_to_fmt(remain: u64) -> String {
+pub(crate) fn remain_to_fmt(remain: u64) -> String {
     let (hours, minutes, seconds) = (remain / 3600, (remain % 3600) / 60, remain % 60);
     if hours == 0 {
         format!("{:02}:{:02}", minutes, seconds)
