@@ -64,9 +64,9 @@ fn main() {
         let conn = Connection::open("db.sqlite").unwrap();
         let mut stmt = conn.prepare("SELECT * FROM termies").unwrap();
 
-
         // print and update the timer every second put remaining time in the terminal
-
+        let timer = std::time::Duration::from_secs(1);
+        // display timer in terminal
 
         let art = std::fs::read_to_string("./assets/sprites/dog.ans").unwrap();
 

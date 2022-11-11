@@ -14,3 +14,8 @@ impl Termie {
     }
 }
 
+pub fn print_termie(termie: &Termie) {
+    let art = std::fs::read_to_string(format!("./assets/sprites/{}.ans", termie.name)).unwrap();
+    println!("{}", art);
+}
+
