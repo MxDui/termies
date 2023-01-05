@@ -4,14 +4,29 @@ use std::env;
 use std::io::Write;
 use std::process::exit;
 // termion grid
+use image::{self, DynamicImage};
 use std::{thread, time};
 use termion::{clear, color, cursor, style};
+use viuer::{print_from_file, Config};
 
 pub fn timer(seconds: u64) {
     let duration = time::Duration::from_secs(seconds);
 
     // Get the current time
     let start = time::Instant::now();
+
+    let conf = Config {
+        width: Some(40),
+        height: Some(30),
+        x: 2,
+        y: 2,
+        ..Default::default()
+    };
+
+    // Get the size of the terminal
+    let (term_width, term_height) = termion::terminal_size().unwrap();
+
+    // Calculate the position of the image
 
     // Run a loop until the elapsed time is greater than or equal to the duration
     while start.elapsed() < duration {
@@ -33,6 +48,8 @@ pub fn timer(seconds: u64) {
             remaining.as_secs()
         )
         .unwrap();
+
+        print_from_file("image.jpg", &conf).expect("Image printing failed.");
 
         // Flush the output so that it is displayed immediately
         std::io::stdout().flush().unwrap();
