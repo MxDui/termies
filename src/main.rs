@@ -9,13 +9,13 @@ use termion::event::*;
 use termion::input::{MouseTerminal, TermRead};
 use termion::raw::IntoRawMode;
 
-mod termies;
 mod clock;
+mod termies;
 
-use clock::clock::{draw, remain_to_fmt};
+use clock::clock::timer;
 
 // import print termie
-use termies::termies::{print_termie, Termie};   
+use termies::termies::{print_termie, Termie};
 
 #[derive(Parser)]
 struct Cli {
@@ -67,21 +67,6 @@ fn main() {
         let conn = Connection::open("db.sqlite").unwrap();
         let mut stmt = conn.prepare("SELECT * FROM termies").unwrap();
 
-        // print and update the timer every second put remaining time in the terminal
-        let timer = std::time::Duration::from_secs(1);
-        // display timer in terminal
-
-        
-        print_termie(&Termie {
-            id: 0,
-            name: "dog".to_string(),
-            color: "red".to_string(),
-        });
-
-        // make a draw clock function
-        draw(100);
-
-
-        
+        timer(128);
     }
 }

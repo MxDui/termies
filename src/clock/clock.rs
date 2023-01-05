@@ -1,49 +1,43 @@
 use regex::Regex;
 use std::collections::HashMap;
 use std::env;
+use std::io::Write;
 use std::process::exit;
-use std::time;
 // termion grid
-use termion::raw::IntoRawMode;
-use termion::screen::AlternateScreen;
-use termion::terminal_size;
+use std::{thread, time};
+use termion::{clear, color, cursor, style};
 
+pub fn timer(seconds: u64) {
+    let duration = time::Duration::from_secs(seconds);
 
-// make a draw clock function
-pub fn draw (remain: u64){
-    // get the time
-    let now = time::SystemTime::now();
+    // Get the current time
+    let start = time::Instant::now();
 
-    // set til out draw clock will be done
-    let until = now + time::Duration::from_secs(remain);
+    // Run a loop until the elapsed time is greater than or equal to the duration
+    while start.elapsed() < duration {
+        // Calculate the remaining time
+        let remaining = duration - start.elapsed();
 
-    // get the time left
-    let mut remain = remain_to_fmt(remain);
+        // Clear the whole terminal
+        print!("{}", clear::All);
 
-    // print the clock in loop
-    loop {
-        // get the time left
+        // Move the cursor to the beginning of the line
+        print!("{}", cursor::Goto(1, 1));
 
-        // print the clock
-        termion::clear::All;
+        // Print the remaining time using the termion crate with a bigger font size and a different color
+        write!(
+            std::io::stdout(),
+            "{}{}{} seconds remaining",
+            style::Bold,
+            color::Fg(color::Red),
+            remaining.as_secs()
+        )
+        .unwrap();
 
-        // print the clock in a grid like this
-        // 00:00:00
-        // if the time is up
-        if time::SystemTime::now() >= until {
-            // break the loop
-            break;
-        }
-    }
+        // Flush the output so that it is displayed immediately
+        std::io::stdout().flush().unwrap();
 
-}
-
-
-pub(crate) fn remain_to_fmt(remain: u64) -> String {
-    let (hours, minutes, seconds) = (remain / 3600, (remain % 3600) / 60, remain % 60);
-    if hours == 0 {
-        format!("{:02}:{:02}", minutes, seconds)
-    } else {
-        format!("{:02}:{:02}:{:02}", hours, minutes, seconds)
+        // Sleep the current thread for 1 second
+        thread::sleep(time::Duration::from_secs(1));
     }
 }
