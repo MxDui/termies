@@ -27,6 +27,8 @@ pub fn timer(seconds: u64) {
     let (term_width, term_height) = termion::terminal_size().unwrap();
 
     // Calculate the position of the image
+    print!("{}", clear::All);
+    print_from_file("image.jpg", &conf).expect("Image printing failed.");
 
     // Run a loop until the elapsed time is greater than or equal to the duration
     while start.elapsed() < duration {
@@ -34,7 +36,6 @@ pub fn timer(seconds: u64) {
         let remaining = duration - start.elapsed();
 
         // Clear the whole terminal
-        print!("{}", clear::All);
 
         // Move the cursor to the beginning of the line
         print!("{}", cursor::Goto(1, 1));
@@ -49,12 +50,11 @@ pub fn timer(seconds: u64) {
         )
         .unwrap();
 
-        print_from_file("image.jpg", &conf).expect("Image printing failed.");
-
         // Flush the output so that it is displayed immediately
         std::io::stdout().flush().unwrap();
 
         // Sleep the current thread for 1 second
         thread::sleep(time::Duration::from_secs(1));
     }
+    print!("{}", clear::All);
 }

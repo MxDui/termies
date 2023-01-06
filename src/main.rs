@@ -67,6 +67,6 @@ fn main() {
         let conn = Connection::open("db.sqlite").unwrap();
         let mut stmt = conn.prepare("SELECT * FROM termies").unwrap();
 
-        timer(128);
+        timer(10);
     }
 }
