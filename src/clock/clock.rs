@@ -15,6 +15,9 @@ pub fn timer(seconds: u64) {
     // Get the current time
     let start = time::Instant::now();
 
+    // Get the size of the terminal
+    let (term_width, term_height) = termion::terminal_size().unwrap();
+
     let conf = Config {
         width: Some(40),
         height: Some(30),
@@ -23,11 +26,9 @@ pub fn timer(seconds: u64) {
         ..Default::default()
     };
 
-    // Get the size of the terminal
-    let (term_width, term_height) = termion::terminal_size().unwrap();
-
     // Calculate the position of the image
     print!("{}", clear::All);
+
     print_from_file("image.jpg", &conf).expect("Image printing failed.");
 
     // Run a loop until the elapsed time is greater than or equal to the duration
@@ -38,7 +39,7 @@ pub fn timer(seconds: u64) {
         // Clear the whole terminal
 
         // Move the cursor to the beginning of the line
-        print!("{}", cursor::Goto(1, 1));
+        print!("{}", cursor::Goto(3, 1));
 
         // Print the remaining time using the termion crate with a bigger font size and a different color
         write!(
