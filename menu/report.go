@@ -25,7 +25,7 @@ func Report() {
 	checkErr(err)
 
 	// get all the data from the database
-	rows, err := db.Query("SELECT * FROM data")
+	rows, err := db.Query("SELECT * FROM sessions")
 	checkErr(err)
 
 	// create a csv file
@@ -38,34 +38,16 @@ func Report() {
 	defer writer.Flush()
 
 	// write the header
-	header := []string{"ID", "Date", "Time", "Temperature", "Humidity", "Pressure"}
-	err = writer.Write(header)
-	checkErr(err)
-
-	// write the data
+	writer.Write([]string{"id", "date", "duration"})
 	for rows.Next() {
 		var id int
 		var date string
-		var time string
-		var temperature float64
-		var humidity float64
-		var pressure float64
-
-		err = rows.Scan(&id, &date, &time, &temperature, &humidity, &pressure)
+		var duration int
+		err = rows.Scan(&id, &date, &duration)
 		checkErr(err)
-
-		// convert the data to strings
-		idStr := strconv.Itoa(id)
-		temperatureStr := strconv.FormatFloat(temperature, 'f', 2, 64)
-		humidityStr := strconv.FormatFloat(humidity, 'f', 2, 64)
-		pressureStr := strconv.FormatFloat(pressure, 'f', 2, 64)
-
-		// create a slice of strings
-		data := []string{idStr, date, time, temperatureStr, humidityStr, pressureStr}
 
 		// write the data to the csv file
-		err = writer.Write(data)
-		checkErr(err)
+		writer.Write([]string{strconv.Itoa(id), date, strconv.Itoa(duration)})
 	}
 
 	// close the database connection
