@@ -13,12 +13,6 @@ import (
 
 func main() {
 
-	// on the first run, the default menu is displayed
-
-	fmt.Println("Welcome to the program")
-
-	// make the file to store the data in the current directory
-
 	// create file if it doesn't exist
 	if _, err := os.Stat("./data.db"); os.IsNotExist(err) {
 		file, err := os.Create("./data.db")
@@ -41,6 +35,7 @@ func main() {
 	switch *menuSwitch {
 	case "default":
 		// do something
+
 	case "debug":
 		// do something
 		menu.Debug(*debugDuration, *programName)
@@ -51,7 +46,11 @@ func main() {
 
 	case "help":
 		// do something
+		menu.Help()
 
+	default:
+		// do something
+		fmt.Println("Invalid menu name")
 	}
 
 }
