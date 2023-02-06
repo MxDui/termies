@@ -32,9 +32,9 @@ func main() {
 	db.Exec("CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY, date TEXT, time TEXT, temperature REAL, humidity REAL, pressure REAL)")
 	db.Exec("CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY, date TEXT, duration INTEGER, program TEXT)")
 
-	var menuSwitch = flag.String("menu", "default", "menu name")
-	var debugDuration = flag.Int("duration", 10, "debug duration")
-	var programName = flag.String("name", "default", "program name")
+	var menuSwitch = flag.String("m", "default", "menu name")
+	var debugDuration = flag.Int("d", 10, "debug duration")
+	var programName = flag.String("n", "default", "program name")
 
 	flag.Parse()
 
