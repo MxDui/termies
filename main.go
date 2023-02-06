@@ -30,10 +30,11 @@ func main() {
 	checkErr(err)
 
 	db.Exec("CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY, date TEXT, time TEXT, temperature REAL, humidity REAL, pressure REAL)")
-	db.Exec("CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY, date TEXT, duration INTEGER)")
+	db.Exec("CREATE TABLE IF NOT EXISTS sessions (id INTEGER PRIMARY KEY, date TEXT, duration INTEGER, program TEXT)")
 
 	var menuSwitch = flag.String("menu", "default", "menu name")
 	var debugDuration = flag.Int("duration", 10, "debug duration")
+	var programName = flag.String("name", "default", "program name")
 
 	flag.Parse()
 
@@ -42,7 +43,7 @@ func main() {
 		// do something
 	case "debug":
 		// do something
-		menu.Debug(*debugDuration)
+		menu.Debug(*debugDuration, *programName)
 
 	case "report":
 		// do something

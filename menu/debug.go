@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func Debug(duration int) {
+func Debug(duration int, programName string) {
 
 	fmt.Println("Starting debug session...")
 	db, err := sql.Open("sqlite3", "./data.db")
@@ -24,10 +24,10 @@ func Debug(duration int) {
 		select {
 		case <-timer.C:
 			// save session to database
-			stmt, err := db.Prepare("INSERT INTO sessions(date, duration) values(?,?)")
+			stmt, err := db.Prepare("INSERT INTO sessions(date, duration, program) VALUES(?, ?, ?)")
 			checkErr(err)
 
-			res, err := stmt.Exec(time.Now(), duration)
+			res, err := stmt.Exec(time.Now(), duration, programName)
 			checkErr(err)
 
 			id, err := res.LastInsertId()

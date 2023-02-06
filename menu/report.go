@@ -29,7 +29,7 @@ func Report() {
 	checkErr(err)
 
 	// create a csv file
-	file, err := os.Create("./report.csv")
+	file, err := os.Create("./debug_report.csv")
 	checkErr(err)
 	defer file.Close()
 
@@ -38,16 +38,17 @@ func Report() {
 	defer writer.Flush()
 
 	// write the header
-	writer.Write([]string{"id", "date", "duration"})
+	writer.Write([]string{"id", "date", "duration", "program"})
 	for rows.Next() {
 		var id int
 		var date string
 		var duration int
-		err = rows.Scan(&id, &date, &duration)
+		var program string
+		err = rows.Scan(&id, &date, &duration, &program)
 		checkErr(err)
 
 		// write the data to the csv file
-		writer.Write([]string{strconv.Itoa(id), date, strconv.Itoa(duration)})
+		writer.Write([]string{strconv.Itoa(id), date, strconv.Itoa(duration), program})
 	}
 
 	// close the database connection
