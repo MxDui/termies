@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 
+	"termies.mxdui.com/menu"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -27,13 +29,13 @@ func main() {
 	db, err := sql.Open("sqlite3", "./data.db")
 	checkErr(err)
 
-	fmt.Println(db)
+	db.Exec("CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY, date TEXT, time TEXT, temperature REAL, humidity REAL, pressure REAL)")
 
-	var menu = flag.String("menu", "default", "menu name")
+	var menuSwitch = flag.String("menu", "default", "menu name")
 
 	flag.Parse()
 
-	switch *menu {
+	switch *menuSwitch {
 	case "default":
 		// do something
 	case "debug":
@@ -41,6 +43,8 @@ func main() {
 
 	case "report":
 		// do something
+		menu.Report()
+
 	case "help":
 		// do something
 
