@@ -8,16 +8,16 @@
 
 ### 1. Clone the repo
 
-### 2. Run the script
+### 2. Build the project
+
+```bash
+go build -o termies
+```
+
+### 3. Run the project
+
+```bash
+./termies
+```
 
 ### 3. Enjoy
-
-## Add it to your bashrc
-
-### 1. Open your bashrc file
-
-### 2. Add the following line to the end of the file
-
-### 3. Save the file
-
-### 4. Restart your terminal
