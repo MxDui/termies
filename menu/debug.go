@@ -23,10 +23,7 @@ func Debug(duration int, programName string) {
 	}
 
 	var facts []string
-	// convert json to array
 	json.Unmarshal(data, &facts)
-
-	// asign file content to data
 
 	fmt.Println("Starting debug session...")
 	db, err := sql.Open("sqlite3", "./data.db")
@@ -38,7 +35,6 @@ func Debug(duration int, programName string) {
 	for {
 		select {
 		case <-timer.C:
-			// save session to database
 			stmt, err := db.Prepare("INSERT INTO sessions(date, duration, program) VALUES(?, ?, ?)")
 			checkErr(err)
 
@@ -52,7 +48,6 @@ func Debug(duration int, programName string) {
 			fmt.Println("Debug session ended.")
 			return
 		default:
-			// clean terminal each second
 			fmt.Print("\033[H\033[2J")
 			fmt.Println("Debugging session in progress...")
 			fmt.Println("Remaining time: ", duration)
@@ -62,7 +57,7 @@ func Debug(duration int, programName string) {
 				fmt.Println("<(o )___")
 				fmt.Println(" ( ._> /")
 				fmt.Println("  `---'")
-				fmt.Println("Random fact: ", facts[getRandomNumber(0, len(facts))])
+				fmt.Println(facts[getRandomNumber(0, len(facts))])
 
 			} else {
 
