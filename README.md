@@ -1,4 +1,4 @@
-# Termies , cute terminal pets
+# Termies , duck terminal pets
 
 ## What is this?
 
