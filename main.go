@@ -49,6 +49,10 @@ func main() {
 		// do something
 		menu.Help()
 
+	case "journal":
+		// do something
+		// TODO JOURNAL module
+
 	default:
 		// do something
 		fmt.Println("Invalid menu name")
