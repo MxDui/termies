@@ -35,6 +35,7 @@ func main() {
 	switch *menuSwitch {
 	case "default":
 		// do something
+		menu.Help()
 
 	case "debug":
 		// do something

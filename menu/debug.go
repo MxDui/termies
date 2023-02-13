@@ -4,7 +4,10 @@ package menu
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"math/rand"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -12,6 +15,18 @@ import (
 )
 
 func Debug(duration int, programName string) {
+
+	data, err := ioutil.ReadFile("./random_facts.json")
+	if err != nil {
+		fmt.Println("File reading error", err)
+		return
+	}
+
+	var facts []string
+	// convert json to array
+	json.Unmarshal(data, &facts)
+
+	// asign file content to data
 
 	fmt.Println("Starting debug session...")
 	db, err := sql.Open("sqlite3", "./data.db")
@@ -37,9 +52,35 @@ func Debug(duration int, programName string) {
 			fmt.Println("Debug session ended.")
 			return
 		default:
-			fmt.Println("Debugging...")
+			// clean terminal each second
+			fmt.Print("\033[H\033[2J")
+			fmt.Println("Debugging session in progress...")
+			fmt.Println("Remaining time: ", duration)
+
+			if duration%2 == 0 {
+				fmt.Println("  __")
+				fmt.Println("<(o )___")
+				fmt.Println(" ( ._> /")
+				fmt.Println("  `---'")
+				fmt.Println("Random fact: ", facts[getRandomNumber(0, len(facts))])
+
+			} else {
+
+				fmt.Println("    __")
+				fmt.Println("___( o)>")
+				fmt.Println("\\ <_. )")
+				fmt.Println(" `---'")
+
+			}
+
+			duration--
 			time.Sleep(1 * time.Second)
 		}
 	}
 
+}
+
+func getRandomNumber(min int, max int) int {
+	rand.Seed(time.Now().Unix())
+	return rand.Intn(max-min) + min
 }
